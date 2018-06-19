@@ -56,43 +56,48 @@ public class MapActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        List<String> permissionList = new ArrayList<>();
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissionList.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            permissionList.add(Manifest.permission.READ_PHONE_STATE);
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            permissionList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
-        if (!permissionList.isEmpty()) {
-            String [] permissions = permissionList.toArray(new String[permissionList.size()]);
-            ActivityCompat.requestPermissions(this, permissions, 1);
-        } else {
+        while(true) {
 
-            MapFragment mapFragment =
-                    (MapFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
-            if (mapFragment == null) {
-                // Create the fragment
-                mapFragment = MapFragment.newInstance();
-                ActivityUtils.addFragmentToActivity(
-                        getSupportFragmentManager(), mapFragment, R.id.contentFrame);
+            List<String> permissionList = new ArrayList<>();
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);
             }
-
-            presenter = new MapPresenter(
-                    BDMap.getInstance(getApplicationContext()),
-                    mapFragment,
-                    this
-            );
-
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+            }
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(Manifest.permission.READ_PHONE_STATE);
+            }
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            }
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            }
+            if (!permissionList.isEmpty()) {
+                String[] permissions = permissionList.toArray(new String[permissionList.size()]);
+                ActivityCompat.requestPermissions(this, permissions, 1);
+            } else {
+                break;
+            }
         }
+
+        MapFragment mapFragment =
+                (MapFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+        if (mapFragment == null) {
+            // Create the fragment
+            mapFragment = MapFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(
+                    getSupportFragmentManager(), mapFragment, R.id.contentFrame);
+        }
+
+        presenter = new MapPresenter(
+                BDMap.getInstance(getApplicationContext()),
+                mapFragment,
+                this
+        );
+
+
     }
 
     /**
