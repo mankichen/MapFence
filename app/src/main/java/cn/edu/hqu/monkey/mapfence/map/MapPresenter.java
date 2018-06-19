@@ -105,7 +105,7 @@ public class MapPresenter implements MapContract.Presenter {
         public void onMapClick(LatLng point){
             Log.d(TAG, "onMapClick: "+point.toString());
 
-            mView.showToast(point.toString());
+            // mView.showToast(point.toString());
 
             if (isDrawingFence){
                 pointSet.savePoint(point);
@@ -207,7 +207,7 @@ public class MapPresenter implements MapContract.Presenter {
     private DialogInterface.OnClickListener alarmDialogListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            isStartListen = false;
+            startLocationListen();
         }
     };
     
@@ -241,16 +241,18 @@ public class MapPresenter implements MapContract.Presenter {
         settings.setZoomGesturesEnabled(isDrawingFence);//获取是否允许缩放手势返回:是否允许缩放手势
 
         if (isDrawingFence){
-            if (pointSet.getPointCnt() < 3){
-                mView.showToast("请选择超过3个点");
-                return;
 
-                // 当点数大于3个点才开始绘制覆盖物
-            }else{
-                /* 先清空点与面 */
+            if (pointSet.getPointCnt() < 3) {
+                if (0 != pointSet.getPointCnt()){
+
+                    mView.showToast("请选择超过3个点");
+                    return;
+                }
+            } else {
+            /* 先清空点与面 */
                 mapDataSource.clearAllMarker();
 
-                /* 绘制多边形 */
+            /* 绘制多边形 */
                 mapDataSource.drawPolygon(pointSet.getPointList());
             }
 
